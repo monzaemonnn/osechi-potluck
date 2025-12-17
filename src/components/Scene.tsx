@@ -11,15 +11,23 @@ import * as THREE from "three";
 import { useState, useRef, useEffect } from "react";
 import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
-function CameraController({ isExploded, controlsRef }: { isExploded: boolean; controlsRef: React.RefObject<OrbitControlsImpl | null> }) {
+function CameraController({
+    isExploded,
+    controlsRef
+}: {
+    isExploded: boolean;
+    controlsRef: React.RefObject<OrbitControlsImpl | null>;
+}) {
     const { camera } = useThree();
-    const [isAnimating, setIsAnimating] = useState(false);
     const targetPos = useRef(new THREE.Vector3(5, 4, 8)); // Start angled
     const lookAtPos = useRef(new THREE.Vector3(0, 0, 0));
+    const isAnimating = useRef(false);
 
     // Trigger animation when view mode changes
     useEffect(() => {
-        setIsAnimating(true);
+        isAnimating.current = true;
+        if (controlsRef.current) controlsRef.current.enabled = false;
+
         if (isExploded) {
             targetPos.current.set(8, 8, 12);
             lookAtPos.current.set(2.5, 0, 2.5);
@@ -27,39 +35,58 @@ function CameraController({ isExploded, controlsRef }: { isExploded: boolean; co
             targetPos.current.set(5, 4, 8); // Return to angled view when closed
             lookAtPos.current.set(0, 0, 0);
         }
-    }, [isExploded]);
+    }, [isExploded, controlsRef]);
 
-    useFrame((state, delta) => {
-        if (!isAnimating) return;
+    useFrame(() => {
+        if (!isAnimating.current) return;
 
         // Smoothly interpolate camera position
         camera.position.lerp(targetPos.current, 0.05);
 
         // Smoothly interpolate controls target
         if (controlsRef.current) {
+            // Ensure disabled during animation (in case it reset)
+            controlsRef.current.enabled = false;
+
             controlsRef.current.target.lerp(lookAtPos.current, 0.05);
             controlsRef.current.update();
         }
 
         // Check if we arrived
         if (camera.position.distanceTo(targetPos.current) < 0.1) {
-            setIsAnimating(false);
+            isAnimating.current = false;
+            if (controlsRef.current) controlsRef.current.enabled = true;
         }
     });
 
     return null;
 }
 
+import { HelpModal } from "./HelpModal";
+
+// ... existing imports ...
+
 export function Scene() {
     const { tiers, claimSlot, clearSlot, error, loading } = useOsechi();
     const [claimModalOpen, setClaimModalOpen] = useState(false);
     const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+    const [helpModalOpen, setHelpModalOpen] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState<{ tierIndex: number; slotIndex: number } | null>(null);
     const [localError, setLocalError] = useState<string | null>(null);
     const [isExploded, setIsExploded] = useState(false);
     const controlsRef = useRef<OrbitControlsImpl>(null);
 
+    // Check for first-time visit
+    useEffect(() => {
+        const hasVisited = localStorage.getItem("osechi_visited");
+        if (!hasVisited) {
+            setHelpModalOpen(true);
+            localStorage.setItem("osechi_visited", "true");
+        }
+    }, []);
+
     const handleSlotClick = (tierIndex: number, slotIndex: number) => {
+        // ... existing logic ...
         setSelectedSlot({ tierIndex, slotIndex });
         setLocalError(null);
 
@@ -71,6 +98,8 @@ export function Scene() {
             setClaimModalOpen(true);
         }
     };
+
+    // ... handleClaim and handleClear ...
 
     const handleClaim = (data: { user: string; dish: string; color: FoodColor }) => {
         if (selectedSlot) {
@@ -117,7 +146,14 @@ export function Scene() {
                 </div>
             )}
 
-            <div className="absolute top-4 right-4 z-10">
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
+                <button
+                    onClick={() => setHelpModalOpen(true)}
+                    className="bg-white/80 backdrop-blur-sm border-2 border-[var(--primary)] text-[var(--primary)] w-10 h-10 rounded-full font-bold shadow-md hover:bg-white transition-all flex items-center justify-center text-lg"
+                    aria-label="Help"
+                >
+                    ?
+                </button>
                 <button
                     onClick={() => setIsExploded(!isExploded)}
                     className="bg-white/80 backdrop-blur-sm border-2 border-[var(--primary)] text-[var(--primary)] px-4 py-2 rounded-full font-bold shadow-md hover:bg-white transition-all"
@@ -127,15 +163,23 @@ export function Scene() {
             </div>
 
             <Canvas camera={{ position: [5, 4, 8], fov: 50 }}>
-                <CameraController isExploded={isExploded} controlsRef={controlsRef} />
+                <CameraController
+                    isExploded={isExploded}
+                    controlsRef={controlsRef}
+                />
                 <ambientLight intensity={0.5} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
                 <pointLight position={[-10, -10, -10]} intensity={0.5} />
 
                 <Jubako3D tiers={tiers} onClaimSlot={handleSlotClick} expanded={isExploded} />
 
-                <ContactShadows position={[0, -2, 0]} opacity={0.5} scale={10} blur={1.5} far={4.5} />
-                <OrbitControls ref={controlsRef} enablePan={false} minPolarAngle={Math.PI / 4} maxPolarAngle={Math.PI / 2} />
+                <ContactShadows position={[0, -2, 0]} opacity={0.5} scale={40} blur={2} far={20} resolution={512} />
+                <OrbitControls
+                    ref={controlsRef}
+                    enablePan={false}
+                    minPolarAngle={Math.PI / 4}
+                    maxPolarAngle={Math.PI / 2}
+                />
                 <Environment preset="city" />
             </Canvas>
 
@@ -150,6 +194,11 @@ export function Scene() {
                 onClose={() => setDetailsModalOpen(false)}
                 data={selectedSlot ? tiers[selectedSlot.tierIndex].slots[selectedSlot.slotIndex] : null}
                 onClear={handleClear}
+            />
+
+            <HelpModal
+                isOpen={helpModalOpen}
+                onClose={() => setHelpModalOpen(false)}
             />
 
             <div className="absolute bottom-4 left-0 right-0 text-center text-sm text-gray-400 pointer-events-none">
