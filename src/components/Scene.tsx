@@ -76,7 +76,13 @@ export function Scene() {
     const [detailsModalOpen, setDetailsModalOpen] = useState(false);
     const [helpModalOpen, setHelpModalOpen] = useState(false);
     const [authChoiceOpen, setAuthChoiceOpen] = useState(false);
-    // ... other state ...
+    const [menuModalOpen, setMenuModalOpen] = useState(false);
+    const [recipeModalOpen, setRecipeModalOpen] = useState(false);
+    const [tempRecipeTarget, setTempRecipeTarget] = useState<{ dish: string; origin: string } | null>(null);
+    const [selectedSlot, setSelectedSlot] = useState<{ tierIndex: number; slotIndex: number } | null>(null);
+    const [localError, setLocalError] = useState<string | null>(null);
+    const [isExploded, setIsExploded] = useState(false);
+    const controlsRef = useRef<OrbitControlsImpl>(null);
 
     // Check for first-time visit (Auth Choice)
     const initialized = useRef(false);
