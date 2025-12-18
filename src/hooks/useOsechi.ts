@@ -46,7 +46,6 @@ export function useOsechi() {
 
   // Load from Firebase Realtime Database
   useEffect(() => {
-    // ... (Existing DB Listener Logic)
     const tiersRef = ref(db, "osechi/tiers");
     const unsubscribe = onValue(tiersRef, (snapshot) => {
       const data = snapshot.val();
@@ -67,18 +66,10 @@ export function useOsechi() {
     });
 
     return () => unsubscribe();
-  }, []); // Remove duplicate useEffect code if I pasted over it, checking below block
+  }, []);
 
   const claimSlot = (tierIndex: number, slotIndex: number, data: Omit<SlotData, "id" | "uid" | "photoURL">) => {
     setError(null);
-
-    // Default: Allow guests but prefer auth
-    // Note: If you want to FORCE login, uncomment next section
-    /*
-    if (!currentUser) {
-        return { success: false, message: "🔒 Please Sign In to add a dish!" };
-    }
-    */
 
     // 1. Strict Duplicate Check (Any Dish)
     const dishLower = data.dish.toLowerCase().trim();
@@ -95,7 +86,6 @@ export function useOsechi() {
 
     // 2. Brown Food Ban
     if (data.color === "Brown") {
-      // ... (Existing Brown logic)
       let totalSlots = 0;
       let brownSlots = 0;
       tiers.forEach((tier) => {
@@ -113,15 +103,21 @@ export function useOsechi() {
       }
     }
 
-    const newTiers = [...tiers];
-    newTiers[tierIndex].slots[slotIndex] = {
+    // Update using specific path to avoid undefined errors in full tree write
+    const newSlot: SlotData = {
       ...data,
       id: crypto.randomUUID(),
       uid: currentUser?.uid || null,
-      photoURL: currentUser?.photoURL || null
+      photoURL: currentUser?.photoURL || null,
+      // Ensure all optionals are at least empty strings or null if needed, 
+      // but Firebase handles missing keys fine if they are truly undefined at the leaf level.
+      // The issue was writing an OBJECT that contained undefined keys deeper in the tree.
+      category: data.category || "",
+      origin: data.origin || "",
+      meaning: data.meaning || ""
     };
 
-    set(ref(db, "osechi/tiers"), newTiers).catch((err) => {
+    set(ref(db, `osechi/tiers/${tierIndex}/slots/${slotIndex}`), newSlot).catch((err) => {
       console.error("Firebase write error:", err);
       setError("Failed to save your dish. Please try again.");
     });
@@ -134,16 +130,12 @@ export function useOsechi() {
 
     // SECURITY: Ownership Check
     if (slot?.uid && currentUser?.uid !== slot.uid) {
-      // If dish has an owner, and you are not them -> Block
       return { success: false, message: "🚫 You can only remove your own dishes!" };
     }
 
     // Note: If slot.uid is undefined (legacy dish), allow anyone to delete it (Community Property)
 
-    const newTiers = [...tiers];
-    newTiers[tierIndex].slots[slotIndex] = null;
-
-    set(ref(db, "osechi/tiers"), newTiers).catch((err) => {
+    set(ref(db, `osechi/tiers/${tierIndex}/slots/${slotIndex}`), null).catch((err) => {
       console.error("Firebase write error:", err);
       setError("Failed to remove dish. Please try again.");
     });
