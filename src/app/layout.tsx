@@ -21,10 +21,6 @@ export const metadata: Metadata = {
   description: "Join our Sharehouse New Year's Potluck! Sign up to bring a dish from your country to our interactive 3D Osechi box. Party starts January 1st.",
   keywords: ["osechi", "potluck", "new year", "sharehouse", "japanese food", "party"],
   authors: [{ name: "DMS Sharehouse" }],
-  icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
-  },
   openGraph: {
     title: "Osechi Potluck 2026 - Sharehouse New Year's Party",
     description: "Sign up to bring a dish from your country! Interactive 3D Osechi box with AI-powered suggestions and recipes.",
