@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
-// Note: Switched to gemini-3-flash-preview as requested.
-// If this is also rate-limited, we can fallback to 'gemini-1.5-flash'.
 
 export async function POST(req: Request) {
     if (!GEMINI_API_KEY) {
@@ -44,17 +42,12 @@ export async function POST(req: Request) {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Gemini API Error Status:", response.status);
-            console.error("Gemini API Error Body:", errorText);
             return NextResponse.json({
-                error: `Gemini API Error: ${response.status}`,
-                details: errorText
+                error: `API Error: ${response.status}`
             }, { status: 500 });
         }
 
         const data = await response.json();
-        console.log("Gemini API Success:", JSON.stringify(data).substring(0, 100) + "...");
         const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (!generatedText) {
@@ -63,8 +56,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ meaning: generatedText.trim() });
 
-    } catch (error) {
-        console.error("Generation Error:", error);
+    } catch {
         return NextResponse.json({ error: "Failed to generate meaning" }, { status: 500 });
     }
 }

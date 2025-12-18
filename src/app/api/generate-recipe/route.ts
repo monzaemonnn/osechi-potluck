@@ -47,9 +47,7 @@ export async function POST(req: Request) {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Gemini API Error:", response.status, errorText);
-            return NextResponse.json({ error: `Gemini API Error: ${response.status}` }, { status: 500 });
+            return NextResponse.json({ error: `API Error: ${response.status}` }, { status: 500 });
         }
 
         const data = await response.json();
@@ -61,8 +59,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ recipe: generatedText });
 
-    } catch (error) {
-        console.error("Recipe Error:", error);
+    } catch {
         return NextResponse.json({ error: "Failed to generate recipe" }, { status: 500 });
     }
 }
