@@ -148,6 +148,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             <input
                                 type="text"
                                 required
+                                maxLength={30}
                                 value={user}
                                 onChange={(e) => setUser(e.target.value)}
                                 className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 font-medium text-sm"
@@ -159,6 +160,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             <input
                                 type="text"
                                 required
+                                maxLength={50}
                                 value={dish}
                                 onChange={(e) => setDish(e.target.value)}
                                 className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 font-medium text-sm"
@@ -183,6 +185,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">{t.claimModal.origin}</label>
                             <input
                                 type="text"
+                                maxLength={30}
                                 value={origin}
                                 onChange={(e) => setOrigin(e.target.value)}
                                 className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 text-sm"
@@ -229,6 +232,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             </button>
                         </div>
                         <textarea
+                            maxLength={200}
                             value={meaning}
                             onChange={(e) => setMeaning(e.target.value)}
                             className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 text-sm h-20 resize-none"

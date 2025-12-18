@@ -59,8 +59,7 @@ export function useOsechi() {
         set(tiersRef, INITIAL_STATE);
       }
       setLoading(false);
-    }, (error) => {
-      console.error("Firebase read error:", error);
+    }, () => {
       setError("Failed to connect to the Osechi box. Check your internet connection.");
       setLoading(false);
     });
@@ -71,8 +70,24 @@ export function useOsechi() {
   const claimSlot = (tierIndex: number, slotIndex: number, data: Omit<SlotData, "id" | "uid" | "photoURL">) => {
     setError(null);
 
+    // SECURITY: Input validation and sanitization
+    const sanitize = (str: string, maxLen: number) =>
+      str.trim().slice(0, maxLen).replace(/[<>]/g, '');
+
+    const validColors: FoodColor[] = ["Red", "Green", "Yellow", "White", "Brown"];
+    if (!validColors.includes(data.color)) {
+      return { success: false, message: "Invalid color selection." };
+    }
+
+    const sanitizedDish = sanitize(data.dish, 50);
+    const sanitizedUser = sanitize(data.user, 30);
+
+    if (!sanitizedDish || !sanitizedUser) {
+      return { success: false, message: "Name and dish are required." };
+    }
+
     // 1. Strict Duplicate Check (Any Dish)
-    const dishLower = data.dish.toLowerCase().trim();
+    const dishLower = sanitizedDish.toLowerCase();
     const isDuplicate = tiers.some((tier) =>
       tier.slots.some((slot) => slot?.dish.toLowerCase().trim() === dishLower)
     );
@@ -81,7 +96,7 @@ export function useOsechi() {
       if (dishLower.includes("potato salad")) {
         return { success: false, message: "⚠️ ALERT: Too much Potato Salad! Please make something else." };
       }
-      return { success: false, message: `⚠️ Someone is already bringing ${data.dish}! Please choose something else.` };
+      return { success: false, message: `⚠️ Someone is already bringing ${sanitizedDish}! Please choose something else.` };
     }
 
     // 2. Brown Food Ban
@@ -106,20 +121,18 @@ export function useOsechi() {
 
     // Update using specific path to avoid undefined errors in full tree write
     const newSlot: SlotData = {
-      ...data,
       id: crypto.randomUUID(),
+      user: sanitizedUser,
+      dish: sanitizedDish,
+      color: data.color,
       uid: currentUser?.uid || null,
       photoURL: currentUser?.photoURL || null,
-      // Ensure all optionals are at least empty strings or null if needed, 
-      // but Firebase handles missing keys fine if they are truly undefined at the leaf level.
-      // The issue was writing an OBJECT that contained undefined keys deeper in the tree.
-      category: data.category || "",
-      origin: data.origin || "",
-      meaning: data.meaning || ""
+      category: sanitize(data.category || "", 30),
+      origin: sanitize(data.origin || "", 30),
+      meaning: sanitize(data.meaning || "", 200)
     };
 
-    set(ref(db, `osechi/tiers/${tierIndex}/slots/${slotIndex}`), newSlot).catch((err) => {
-      console.error("Firebase write error:", err);
+    set(ref(db, `osechi/tiers/${tierIndex}/slots/${slotIndex}`), newSlot).catch(() => {
       setError("Failed to save your dish. Please try again.");
     });
 
@@ -136,8 +149,7 @@ export function useOsechi() {
 
     // Note: If slot.uid is undefined (legacy dish), allow anyone to delete it (Community Property)
 
-    set(ref(db, `osechi/tiers/${tierIndex}/slots/${slotIndex}`), null).catch((err) => {
-      console.error("Firebase write error:", err);
+    set(ref(db, `osechi/tiers/${tierIndex}/slots/${slotIndex}`), null).catch(() => {
       setError("Failed to remove dish. Please try again.");
     });
 
