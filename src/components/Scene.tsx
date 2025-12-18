@@ -63,6 +63,9 @@ function CameraController({
 }
 
 import { HelpModal } from "./HelpModal";
+import { MenuModal } from "./MenuModal";
+import { RecipeModal } from "./RecipeModal";
+import { LoginButton } from "./LoginButton";
 
 // ... existing imports ...
 
@@ -71,17 +74,25 @@ export function Scene() {
     const [claimModalOpen, setClaimModalOpen] = useState(false);
     const [detailsModalOpen, setDetailsModalOpen] = useState(false);
     const [helpModalOpen, setHelpModalOpen] = useState(false);
+    const [menuModalOpen, setMenuModalOpen] = useState(false);
+    const [recipeModalOpen, setRecipeModalOpen] = useState(false);
+    const [tempRecipeTarget, setTempRecipeTarget] = useState<{ dish: string; origin: string } | null>(null);
     const [selectedSlot, setSelectedSlot] = useState<{ tierIndex: number; slotIndex: number } | null>(null);
     const [localError, setLocalError] = useState<string | null>(null);
     const [isExploded, setIsExploded] = useState(false);
     const controlsRef = useRef<OrbitControlsImpl>(null);
 
     // Check for first-time visit
+    const initialized = useRef(false);
     useEffect(() => {
-        const hasVisited = localStorage.getItem("osechi_visited");
-        if (!hasVisited) {
-            setHelpModalOpen(true);
-            localStorage.setItem("osechi_visited", "true");
+        if (!initialized.current) {
+            initialized.current = true;
+            const hasVisited = localStorage.getItem("osechi_visited");
+            if (!hasVisited) {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
+                setHelpModalOpen(true);
+                localStorage.setItem("osechi_visited", "true");
+            }
         }
     }, []);
 
@@ -99,9 +110,18 @@ export function Scene() {
         }
     };
 
+
+
     // ... handleClaim and handleClear ...
 
-    const handleClaim = (data: { user: string; dish: string; color: FoodColor }) => {
+    const handleClaim = (data: {
+        user: string;
+        dish: string;
+        color: FoodColor;
+        category: string;
+        origin: string;
+        meaning: string;
+    }) => {
         if (selectedSlot) {
             const result = claimSlot(selectedSlot.tierIndex, selectedSlot.slotIndex, data);
             if (result.success) {
@@ -115,10 +135,28 @@ export function Scene() {
 
     const handleClear = () => {
         if (selectedSlot) {
-            clearSlot(selectedSlot.tierIndex, selectedSlot.slotIndex);
-            setDetailsModalOpen(false);
-            setSelectedSlot(null);
+            const result = clearSlot(selectedSlot.tierIndex, selectedSlot.slotIndex);
+            // Typescript check: existing useOsechi might not return type yet, but we updated it.
+            // If result is object, check success.
+            if (result && !result.success) {
+                setLocalError(result.message || "Cannot remove this dish.");
+                // Keep modal open so user sees error? Or close?
+                // Let's keep detail modal open but show error toast.
+            } else {
+                setDetailsModalOpen(false);
+                setSelectedSlot(null);
+            }
         }
+    };
+
+    const handleCheckRecipe = (dish: string, origin: string) => {
+        setTempRecipeTarget({ dish, origin });
+        setRecipeModalOpen(true);
+    };
+
+    const handleCloseRecipe = () => {
+        setRecipeModalOpen(false);
+        setTempRecipeTarget(null);
     };
 
     return (
@@ -140,25 +178,41 @@ export function Scene() {
             {loading && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
                     <div className="flex flex-col items-center">
-                        <div className="w-12 h-12 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <p className="text-[var(--primary)] font-bold animate-pulse">Loading Osechi...</p>
+                        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <p className="text-primary font-bold animate-pulse">Loading Osechi...</p>
                     </div>
                 </div>
             )}
 
-            <div className="absolute top-4 right-4 z-10 flex gap-2">
+            <div className="absolute top-4 right-4 z-10 flex gap-3 items-center">
+                {/* Auth */}
+                <LoginButton />
+
+                {/* Menu List */}
+                <button
+                    onClick={() => setMenuModalOpen(true)}
+                    className="bg-white/80 backdrop-blur-sm border-2 border-primary text-primary w-10 h-10 rounded-full font-bold shadow-md hover:bg-white transition-all flex items-center justify-center text-xl active:scale-95"
+                    title="View Full Menu"
+                >
+                    📜
+                </button>
+
+                {/* Guide */}
                 <button
                     onClick={() => setHelpModalOpen(true)}
-                    className="bg-white/80 backdrop-blur-sm border-2 border-[var(--primary)] text-[var(--primary)] w-10 h-10 rounded-full font-bold shadow-md hover:bg-white transition-all flex items-center justify-center text-lg"
-                    aria-label="Help"
+                    className="bg-white/80 hover:bg-white text-gray-700 font-bold py-2 px-4 rounded-full shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/50"
+                    title="Osechi Guide"
                 >
-                    ?
+                    <span className="text-lg">🍱</span>
+                    <span className="hidden sm:inline">Guide</span>
                 </button>
+
+                {/* Open/Close Control */}
                 <button
                     onClick={() => setIsExploded(!isExploded)}
-                    className="bg-white/80 backdrop-blur-sm border-2 border-[var(--primary)] text-[var(--primary)] px-4 py-2 rounded-full font-bold shadow-md hover:bg-white transition-all"
+                    className="bg-primary text-primary-foreground px-5 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all text-sm sm:text-base border-2 border-primary"
                 >
-                    {isExploded ? "📦 Close Box" : "🍱 Open Osechi"}
+                    {isExploded ? "📦 Close Box" : "✨ Open Osechi"}
                 </button>
             </div>
 
@@ -187,19 +241,45 @@ export function Scene() {
                 isOpen={claimModalOpen}
                 onClose={() => setClaimModalOpen(false)}
                 onSubmit={handleClaim}
+                currentDishes={tiers.flatMap(t => t.slots)
+                    .filter(s => s !== null)
+                    .map(s => ({ dish: s!.dish, color: s!.color, category: s!.category }))}
+                onGetRecipe={handleCheckRecipe}
+                tierName={selectedSlot ? tiers[selectedSlot.tierIndex].name : undefined}
             />
+
 
             <SlotDetailsModal
                 isOpen={detailsModalOpen}
                 onClose={() => setDetailsModalOpen(false)}
                 data={selectedSlot ? tiers[selectedSlot.tierIndex].slots[selectedSlot.slotIndex] : null}
                 onClear={handleClear}
+                onGetRecipe={() => setRecipeModalOpen(true)}
+            />
+
+            <RecipeModal
+                isOpen={recipeModalOpen}
+                onClose={handleCloseRecipe}
+                dish={tempRecipeTarget ? tempRecipeTarget.dish : (selectedSlot && tiers[selectedSlot.tierIndex].slots[selectedSlot.slotIndex]
+                    ? tiers[selectedSlot.tierIndex].slots[selectedSlot.slotIndex]!.dish
+                    : "")}
+                origin={tempRecipeTarget ? tempRecipeTarget.origin : (selectedSlot && tiers[selectedSlot.tierIndex].slots[selectedSlot.slotIndex]
+                    ? tiers[selectedSlot.tierIndex].slots[selectedSlot.slotIndex]!.origin
+                    : undefined)}
             />
 
             <HelpModal
                 isOpen={helpModalOpen}
                 onClose={() => setHelpModalOpen(false)}
             />
+
+            <MenuModal
+                isOpen={menuModalOpen}
+                onClose={() => setMenuModalOpen(false)}
+                tiers={tiers}
+            />
+
+
 
             <div className="absolute bottom-4 left-0 right-0 text-center text-sm text-gray-400 pointer-events-none">
                 <p>Drag to rotate • Click slot to claim</p>

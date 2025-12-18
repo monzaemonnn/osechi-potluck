@@ -6,7 +6,7 @@ import * as THREE from "three";
 export function Lid3D({ isOpen }: { isOpen: boolean }) {
     const groupRef = useRef<THREE.Group>(null);
     const [lidTexture, redLacquer] = useTexture([
-        "/textures/lid_texture_final.jpg",
+        "/textures/lid_texture_horse.jpg",
         "/textures/lacquer_red.png",
     ]);
 

@@ -1,67 +1,71 @@
-"use client";
-
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { SlotData, FoodColor } from "@/hooks/useOsechi";
+import { SlotData } from "@/hooks/useOsechi";
 
 interface SlotDetailsModalProps {
     isOpen: boolean;
     onClose: () => void;
     data: SlotData | null;
     onClear: () => void;
+    onGetRecipe: () => void;
 }
 
-const EMOJI_MAP: Record<string, string> = {
-    Red: "🔴",
-    Green: "🟢",
-    Yellow: "🟡",
-    White: "⚪",
-    Brown: "🟤",
-};
-
-export function SlotDetailsModal({ isOpen, onClose, data, onClear }: SlotDetailsModalProps) {
-    if (!data) return null;
+export function SlotDetailsModal({ isOpen, onClose, data, onClear, onGetRecipe }: SlotDetailsModalProps) {
+    if (!isOpen || !data) return null;
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[425px] bg-[#FFF9F0] border-2 border-primary">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-primary text-center">
-                        {EMOJI_MAP[data.color]} {data.dish}
-                    </DialogTitle>
-                </DialogHeader>
-
-                <div className="py-6 text-center space-y-4">
-                    <div>
-                        <p className="text-sm text-gray-500 uppercase tracking-wide">Brought by</p>
-                        <p className="text-xl font-medium">{data.user}</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+            <div
+                className="bg-white/90 backdrop-blur-md rounded-2xl p-6 w-full max-w-sm shadow-2xl border border-white/50 transform transition-all scale-100 animate-in zoom-in-95 duration-200"
+                onClick={(e) => e.stopPropagation()}
+            >
+                {/* Header */}
+                <div className="text-center mb-6">
+                    <div className="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full mb-2">
+                        {data.category || "Potluck Dish"}
                     </div>
-
-                    <div className="p-4 bg-white rounded-lg border border-dashed border-gray-300">
-                        <p className="text-sm text-gray-600 italic">
-                            "Looks delicious!"
-                        </p>
-                    </div>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-1">
+                        {data.dish}
+                    </h2>
+                    <p className="text-gray-500 text-sm">
+                        Brought by <span className="font-bold text-gray-700">{data.user}</span>
+                        {data.origin && <span className="text-gray-400"> • {data.origin}</span>}
+                    </p>
                 </div>
 
-                <DialogFooter className="sm:justify-between gap-2">
-                    <Button variant="outline" onClick={onClose} className="w-full sm:w-auto">
-                        Close
-                    </Button>
-                    <Button
-                        variant="destructive"
-                        onClick={() => {
-                            if (confirm("Are you sure you want to remove this dish?")) {
-                                onClear();
-                                onClose();
-                            }
-                        }}
-                        className="w-full sm:w-auto"
+                {/* Meaning (Iware) Section */}
+                {data.meaning && (
+                    <div className="bg-orange-50/80 p-4 rounded-xl border border-orange-100 mb-6 italic text-gray-700 text-center relative">
+                        <span className="absolute -top-3 left-4 text-2xl">❝</span>
+                        <p className="px-2 text-sm leading-relaxed">
+                            {data.meaning}
+                        </p>
+                        <span className="absolute -bottom-3 right-4 text-2xl">❞</span>
+                    </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex flex-col gap-3">
+                    <button
+                        onClick={onGetRecipe}
+                        className="w-full bg-orange-100 text-orange-700 font-bold py-3 rounded-xl hover:bg-orange-200 transition-all flex items-center justify-center gap-2 shadow-sm"
                     >
-                        Remove Dish
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                        📜 Get Recipe
+                    </button>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={onClear}
+                            className="flex-1 bg-red-50 text-red-500 font-bold py-3 rounded-xl hover:bg-red-100 transition-all text-sm"
+                        >
+                            Delete
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="flex-[2] bg-primary text-primary-foreground font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        >
+                            Awesome! 😋
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }

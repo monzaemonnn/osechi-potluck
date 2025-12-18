@@ -69,9 +69,9 @@ export function Tier3D({ position, tier, isOpen, onClaimSlot }: Tier3DProps) {
                 <>
                     {/* North Label */}
                     <Text
-                        position={[0, -0.1, -1.76]}
+                        position={[0, -0.05, -1.76]}
                         rotation={[0, Math.PI, 0]}
-                        fontSize={0.15}
+                        fontSize={0.22}
                         color="#F2C94C"
                         anchorX="center"
                         anchorY="middle"
@@ -80,8 +80,8 @@ export function Tier3D({ position, tier, isOpen, onClaimSlot }: Tier3DProps) {
                     </Text>
                     {/* South Label */}
                     <Text
-                        position={[0, -0.1, 1.76]}
-                        fontSize={0.15}
+                        position={[0, -0.05, 1.76]}
+                        fontSize={0.22}
                         color="#F2C94C"
                         anchorX="center"
                         anchorY="middle"
@@ -90,9 +90,9 @@ export function Tier3D({ position, tier, isOpen, onClaimSlot }: Tier3DProps) {
                     </Text>
                     {/* East Label */}
                     <Text
-                        position={[1.76, -0.1, 0]}
+                        position={[1.76, -0.05, 0]}
                         rotation={[0, Math.PI / 2, 0]}
-                        fontSize={0.15}
+                        fontSize={0.22}
                         color="#F2C94C"
                         anchorX="center"
                         anchorY="middle"
@@ -101,9 +101,9 @@ export function Tier3D({ position, tier, isOpen, onClaimSlot }: Tier3DProps) {
                     </Text>
                     {/* West Label */}
                     <Text
-                        position={[-1.76, -0.1, 0]}
+                        position={[-1.76, -0.05, 0]}
                         rotation={[0, -Math.PI / 2, 0]}
-                        fontSize={0.15}
+                        fontSize={0.22}
                         color="#F2C94C"
                         anchorX="center"
                         anchorY="middle"
