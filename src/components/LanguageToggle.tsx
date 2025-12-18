@@ -25,7 +25,7 @@ export function LanguageToggle() {
         <div className="relative" ref={containerRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="px-3 py-2 rounded-sm bg-black/60 backdrop-blur-sm border border-amber-500/40 shadow-lg flex items-center justify-center text-sm hover:bg-black/80 hover:border-amber-400 transition-all text-amber-300 font-medium uppercase tracking-wider"
+                className="px-2 py-1.5 sm:px-3 sm:py-2 rounded-sm bg-black/60 backdrop-blur-sm border border-amber-500/40 shadow-lg flex items-center justify-center text-xs sm:text-sm hover:bg-black/80 hover:border-amber-400 transition-all text-amber-300 font-medium uppercase tracking-wider"
                 title="Change Language"
             >
                 {currentLang.code.toUpperCase()}

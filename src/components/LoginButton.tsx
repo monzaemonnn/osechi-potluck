@@ -61,7 +61,7 @@ export function LoginButton() {
     return (
         <button
             onClick={handleLogin}
-            className="bg-black/60 hover:bg-black/80 text-amber-300 font-medium py-2 px-4 rounded-sm shadow-lg backdrop-blur-sm transition-all border border-amber-500/40 hover:border-amber-400 flex items-center gap-2 text-sm uppercase tracking-wider"
+            className="bg-black/60 hover:bg-black/80 text-amber-300 font-medium py-1.5 px-2 sm:py-2 sm:px-4 rounded-sm shadow-lg backdrop-blur-sm transition-all border border-amber-500/40 hover:border-amber-400 flex items-center gap-2 text-xs sm:text-sm uppercase tracking-wider"
         >
             {t.signIn}
         </button>

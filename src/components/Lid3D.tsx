@@ -20,7 +20,7 @@ export function Lid3D({ isOpen, onClose }: Lid3DProps) {
     lidTexture.wrapS = lidTexture.wrapT = THREE.ClampToEdgeWrapping;
     lidTexture.repeat.set(1, 1);
     lidTexture.center.set(0.5, 0.5);
-    lidTexture.rotation = -Math.PI / 2;
+    lidTexture.rotation = 0; // No rotation - face user
 
     // Side texture (Red Lacquer) - Repeat
     redLacquer.wrapS = redLacquer.wrapT = THREE.RepeatWrapping;

@@ -19,8 +19,8 @@ function CameraController({
     controlsRef: React.RefObject<OrbitControlsImpl | null>;
 }) {
     const { camera } = useThree();
-    const targetPos = useRef(new THREE.Vector3(5, 4, 8)); // Start angled
-    const lookAtPos = useRef(new THREE.Vector3(0, 0, 0));
+    const targetPos = useRef(new THREE.Vector3(7, 7, 12)); // Zoomed out more
+    const lookAtPos = useRef(new THREE.Vector3(0, 1, 0)); // Look slightly up to center on lid
     const isAnimating = useRef(false);
 
     // Trigger animation when view mode changes
@@ -29,11 +29,11 @@ function CameraController({
         if (controlsRef.current) controlsRef.current.enabled = false;
 
         if (isExploded) {
-            targetPos.current.set(8, 8, 12);
+            targetPos.current.set(12, 12, 18); // Zoomed out more to fit all tiers
             lookAtPos.current.set(2.5, 0, 2.5);
         } else {
-            targetPos.current.set(5, 4, 8); // Return to angled view when closed
-            lookAtPos.current.set(0, 0, 0);
+            targetPos.current.set(7, 7, 12); // Zoomed out more
+            lookAtPos.current.set(0, 1, 0); // Center on lid
         }
     }, [isExploded, controlsRef]);
 
@@ -207,7 +207,7 @@ export function Scene() {
                 </div>
             )}
 
-            <div className="absolute top-4 right-4 z-10 flex gap-2 items-center">
+            <div className="absolute top-3 left-3 right-3 z-10 flex gap-1 sm:gap-2 items-center flex-wrap justify-center sm:justify-end">
                 <LanguageToggle />
 
                 {/* Auth */}
@@ -216,7 +216,7 @@ export function Scene() {
                 {/* Menu List */}
                 <button
                     onClick={() => setMenuModalOpen(true)}
-                    className="bg-black/60 backdrop-blur-sm border border-amber-500/40 text-amber-300 px-3 py-2 rounded-sm font-medium shadow-lg hover:bg-black/80 hover:border-amber-400 transition-all flex items-center justify-center text-sm uppercase tracking-wider"
+                    className="bg-black/60 backdrop-blur-sm border border-amber-500/40 text-amber-300 px-2 py-1.5 sm:px-3 sm:py-2 rounded-sm font-medium shadow-lg hover:bg-black/80 hover:border-amber-400 transition-all flex items-center justify-center text-xs sm:text-sm uppercase tracking-wider"
                     title={t.appTitle}
                 >
                     Menu
@@ -225,7 +225,7 @@ export function Scene() {
                 {/* Guide */}
                 <button
                     onClick={() => setHelpModalOpen(true)}
-                    className="bg-black/60 hover:bg-black/80 text-amber-300 font-medium py-2 px-4 rounded-sm shadow-lg backdrop-blur-sm transition-all flex items-center gap-2 border border-amber-500/40 hover:border-amber-400 text-sm uppercase tracking-wider"
+                    className="bg-black/60 hover:bg-black/80 text-amber-300 font-medium py-1.5 px-2 sm:py-2 sm:px-4 rounded-sm shadow-lg backdrop-blur-sm transition-all flex items-center gap-2 border border-amber-500/40 hover:border-amber-400 text-xs sm:text-sm uppercase tracking-wider"
                     title={t.guide}
                 >
                     {t.guide}
@@ -234,14 +234,14 @@ export function Scene() {
                 {/* Open/Close Control */}
                 <button
                     onClick={() => setIsExploded(!isExploded)}
-                    className="bg-gradient-to-r from-amber-600 to-amber-500 text-black px-5 py-2 rounded-sm font-bold shadow-lg hover:shadow-amber-500/30 hover:shadow-xl transition-all text-sm uppercase tracking-wider border border-amber-400"
+                    className="bg-gradient-to-r from-amber-600 to-amber-500 text-black px-3 py-1.5 sm:px-5 sm:py-2 rounded-sm font-bold shadow-lg hover:shadow-amber-500/30 hover:shadow-xl transition-all text-xs sm:text-sm uppercase tracking-wider border border-amber-400"
                 >
                     {isExploded ? t.closeBox : t.openBox}
                 </button>
             </div>
 
             <Canvas
-                camera={{ position: [5, 4, 8], fov: 50 }}
+                camera={{ position: [6, 6, 10], fov: 40 }}
                 gl={{ alpha: true }}
                 style={{ background: 'transparent' }}
             >
