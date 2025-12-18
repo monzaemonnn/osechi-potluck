@@ -11,9 +11,10 @@ interface Jubako3DProps {
     tiers: TierData[];
     onClaimSlot: (tierIndex: number, slotIndex: number) => void;
     expanded: boolean;
+    onToggle?: () => void;
 }
 
-export function Jubako3D({ tiers, onClaimSlot, expanded }: Jubako3DProps) {
+export function Jubako3D({ tiers, onClaimSlot, expanded, onToggle }: Jubako3DProps) {
     const groupRef = useRef<THREE.Group>(null);
 
     useFrame((state, delta) => {
@@ -46,6 +47,14 @@ export function Jubako3D({ tiers, onClaimSlot, expanded }: Jubako3DProps) {
         }
     });
 
+    // Handle click on closed box to open it
+    const handleBoxClick = (e: { stopPropagation: () => void }) => {
+        if (!expanded && onToggle) {
+            e.stopPropagation();
+            onToggle();
+        }
+    };
+
     return (
         <group ref={groupRef}>
             {tiers.map((tier, index) => (
@@ -57,7 +66,7 @@ export function Jubako3D({ tiers, onClaimSlot, expanded }: Jubako3DProps) {
                     onClaimSlot={(slotIndex) => onClaimSlot(index, slotIndex)}
                 />
             ))}
-            <Lid3D isOpen={expanded} />
+            <Lid3D isOpen={expanded} onClose={onToggle} />
         </group>
     );
 }

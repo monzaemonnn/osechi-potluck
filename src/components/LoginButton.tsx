@@ -36,21 +36,21 @@ export function LoginButton() {
 
     if (user) {
         return (
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm pr-1 pl-1 py-1 rounded-full shadow-md border border-white/50">
+            <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm pr-2 pl-2 py-1 rounded-sm shadow-lg border border-amber-500/40">
                 {user.photoURL ? (
                     <img
                         src={user.photoURL}
                         alt={user.displayName || "User"}
-                        className="w-8 h-8 rounded-full border border-gray-200"
+                        className="w-7 h-7 rounded-sm border border-amber-500/30"
                     />
                 ) : (
-                    <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-sm font-bold text-orange-600">
+                    <span className="w-7 h-7 rounded-sm bg-amber-500/20 flex items-center justify-center text-xs font-bold text-amber-300">
                         {user.displayName?.charAt(0) || "U"}
                     </span>
                 )}
                 <button
                     onClick={handleLogout}
-                    className="text-xs font-bold text-gray-500 hover:text-red-500 px-2 transition-colors"
+                    className="text-xs font-medium text-gray-500 hover:text-red-400 px-1 transition-colors uppercase tracking-wider"
                 >
                     {t.signOut}
                 </button>
@@ -61,10 +61,9 @@ export function LoginButton() {
     return (
         <button
             onClick={handleLogin}
-            className="bg-white/80 hover:bg-white text-gray-700 font-bold py-2 px-4 rounded-full shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 border border-white/50 flex items-center gap-2"
+            className="bg-black/60 hover:bg-black/80 text-amber-300 font-medium py-2 px-4 rounded-sm shadow-lg backdrop-blur-sm transition-all border border-amber-500/40 hover:border-amber-400 flex items-center gap-2 text-sm uppercase tracking-wider"
         >
-            <span className="text-lg">🔑</span>
-            <span className="hidden sm:inline text-sm">{t.signIn}</span>
+            {t.signIn}
         </button>
     );
 }

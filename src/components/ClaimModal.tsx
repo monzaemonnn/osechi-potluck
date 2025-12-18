@@ -19,20 +19,20 @@ interface ClaimModalProps {
 }
 
 const COLORS: { value: FoodColor; label: string; bg: string }[] = [
-    { value: "Red", label: "Red (Joy/Protection)", bg: "bg-[#D9381E]" },
-    { value: "White", label: "White (Purity)", bg: "bg-white border-2 border-gray-200" },
-    { value: "Yellow", label: "Yellow (Wealth)", bg: "bg-[#F2C94C]" },
-    { value: "Green", label: "Green (Health)", bg: "bg-[#4CAF50]" },
-    { value: "Brown", label: "Brown (Stability)", bg: "bg-[#8D6E63]" },
+    { value: "Red", label: "Red — Joy", bg: "bg-red-500" },
+    { value: "White", label: "White — Purity", bg: "bg-gray-200" },
+    { value: "Yellow", label: "Yellow — Wealth", bg: "bg-amber-400" },
+    { value: "Green", label: "Green — Health", bg: "bg-emerald-500" },
+    { value: "Brown", label: "Brown — Stability", bg: "bg-amber-800" },
 ];
 
 const CATEGORIES = [
-    "Savory 🧂",
-    "Sweet 🍬",
-    "Sour 🍋",
-    "Spicy 🌶️",
-    "Alcohol 🍶",
-    "Other 🥢"
+    "Savory",
+    "Sweet",
+    "Sour",
+    "Spicy",
+    "Alcohol",
+    "Other"
 ];
 
 export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetRecipe, tierName }: ClaimModalProps) {
@@ -105,65 +105,63 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                 if (data.category) setCategory(data.category);
                 if (data.origin) setOrigin(data.origin);
                 if (data.meaning) setMeaning(data.meaning);
-                alert(`💡 Suggestion: ${data.dish}\n\nWhy: ${data.reason}`);
+                alert(`Suggestion: ${data.dish}\n\n${data.reason}`);
             }
         } catch (error) {
             console.error(error);
-            alert("Failed to get suggestion. The AI Chef is busy!");
+            alert("Failed to get suggestion.");
         } finally {
             setIsSuggesting(false);
         }
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             <div
-                className="bg-white/90 backdrop-blur-md rounded-2xl p-6 w-full max-w-md shadow-2xl border border-white/50 transform transition-all scale-100 animate-in zoom-in-95 duration-200"
+                className="bg-gray-900/95 backdrop-blur-md rounded-sm p-6 w-full max-w-md shadow-2xl border border-amber-500/30 transform transition-all scale-100 animate-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center mb-4">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-800 leading-tight">
+                        <h2 className="text-xl font-bold text-amber-300 uppercase tracking-wider">
                             {t.claimModal.title}
                         </h2>
-                        {tierName && <p className="text-xs text-orange-600 font-bold">{tierName}</p>}
+                        {tierName && <p className="text-xs text-amber-500 font-medium">{tierName}</p>}
                     </div>
                     <button
                         type="button"
                         onClick={handleSuggest}
                         disabled={isSuggesting}
-                        className="text-xs bg-gradient-to-r from-green-500 to-teal-600 text-white px-3 py-2 rounded-lg font-bold shadow-md hover:shadow-lg disabled:opacity-50 transition-all flex items-center gap-1 active:scale-95"
+                        className="text-xs bg-gradient-to-r from-emerald-700 to-teal-700 text-white px-3 py-2 rounded-sm font-medium shadow-md hover:shadow-lg disabled:opacity-50 transition-all uppercase tracking-wider"
                     >
-                        {isSuggesting ? (
-                            <span className="animate-spin">👨‍🍳</span>
-                        ) : (
-                            t.claimModal.suggestBtn
-                        )}
+                        {isSuggesting ? "..." : t.claimModal.suggestBtn}
                     </button>
                 </div>
+
+                <div className="gold-divider mb-4"></div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Basic Info */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.name}</label>
+                            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">{t.claimModal.name}</label>
                             <input
                                 type="text"
                                 required
                                 value={user}
                                 onChange={(e) => setUser(e.target.value)}
-                                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50 font-bold"
+                                className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 font-medium text-sm"
                                 placeholder={t.claimModal.name}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.dish}</label>
+                            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">{t.claimModal.dish}</label>
                             <input
                                 type="text"
                                 required
                                 value={dish}
                                 onChange={(e) => setDish(e.target.value)}
-                                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50 font-bold"
+                                className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 font-medium text-sm"
                                 placeholder={t.claimModal.dish}
                             />
                         </div>
@@ -172,22 +170,22 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                     {/* Category & Origin */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.category}</label>
+                            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">{t.claimModal.category}</label>
                             <select
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
-                                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50"
+                                className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 text-sm"
                             >
                                 {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.origin}</label>
+                            <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">{t.claimModal.origin}</label>
                             <input
                                 type="text"
                                 value={origin}
                                 onChange={(e) => setOrigin(e.target.value)}
-                                className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50"
+                                className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 text-sm"
                                 placeholder={t.claimModal.origin}
                             />
                         </div>
@@ -195,22 +193,22 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
 
                     {/* Color Selection */}
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">{t.claimModal.color}</label>
+                        <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wider">{t.claimModal.color}</label>
                         <div className="flex justify-between gap-2">
                             {COLORS.map((c) => (
                                 <button
                                     key={c.value}
                                     type="button"
                                     onClick={() => setColor(c.value)}
-                                    className={`w-10 h-10 rounded-full transition-all shadow-sm ${c.bg} ${color === c.value
-                                        ? "ring-4 ring-offset-2 ring-orange-400 scale-110"
-                                        : "hover:scale-105 opacity-80"
+                                    className={`w-10 h-10 rounded-sm transition-all shadow-sm ${c.bg} ${color === c.value
+                                        ? "ring-2 ring-offset-2 ring-offset-gray-900 ring-amber-500 scale-110"
+                                        : "hover:scale-105 opacity-70"
                                         }`}
                                     title={c.label}
                                 />
                             ))}
                         </div>
-                        <p className="text-center text-xs text-gray-500 mt-1 font-medium">
+                        <p className="text-center text-xs text-gray-600 mt-1">
                             {COLORS.find(c => c.value === color)?.label}
                         </p>
                     </div>
@@ -218,36 +216,34 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                     {/* Meaning (AI Section) */}
                     <div>
                         <div className="flex justify-between items-end mb-1">
-                            <label className="block text-sm font-bold text-gray-700">
+                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 {t.claimModal.meaning}
                             </label>
                             <button
                                 type="button"
                                 onClick={handleGenerateMeaning}
                                 disabled={!dish || isGenerating}
-                                className="text-xs bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-2 py-1 rounded-lg font-bold shadow-sm hover:shadow-md disabled:opacity-50 transition-all flex items-center gap-1"
+                                className="text-xs bg-gradient-to-r from-indigo-600 to-purple-700 text-white px-2 py-1 rounded-sm font-medium shadow-sm hover:shadow-md disabled:opacity-50 transition-all uppercase tracking-wider"
                             >
-                                {isGenerating ? (
-                                    <span className="animate-spin">✨</span>
-                                ) : (
-                                    t.claimModal.generateBtn
-                                )}
+                                {isGenerating ? "..." : t.claimModal.generateBtn}
                             </button>
                         </div>
                         <textarea
                             value={meaning}
                             onChange={(e) => setMeaning(e.target.value)}
-                            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50 text-sm h-20 resize-none"
+                            className="w-full px-3 py-2 rounded-sm border border-amber-500/30 focus:outline-none focus:ring-1 focus:ring-amber-500 bg-black/50 text-gray-200 text-sm h-20 resize-none"
                             placeholder={t.claimModal.meaning}
                         />
                     </div>
 
+                    <div className="gold-divider"></div>
+
                     {/* Actions */}
-                    <div className="flex gap-3 pt-2">
+                    <div className="flex gap-2 pt-2">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="bg-gray-100 text-gray-600 font-bold py-3 px-4 rounded-xl hover:bg-gray-200 transition-all text-sm"
+                            className="bg-gray-800 text-gray-400 font-medium py-2.5 px-4 rounded-sm hover:bg-gray-700 transition-all text-xs uppercase tracking-wider border border-gray-700"
                         >
                             {t.claimModal.cancel}
                         </button>
@@ -255,13 +251,13 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             type="button"
                             onClick={() => onGetRecipe(dish, origin)}
                             disabled={!dish}
-                            className="flex-1 bg-orange-100 text-orange-700 font-bold py-3 rounded-xl hover:bg-orange-200 transition-all disabled:opacity-50 text-sm flex items-center justify-center gap-1"
+                            className="flex-1 bg-amber-500/10 text-amber-300 font-medium py-2.5 rounded-sm hover:bg-amber-500/20 transition-all disabled:opacity-50 text-xs uppercase tracking-wider border border-amber-500/30"
                         >
                             {t.claimModal.checkRecipe}
                         </button>
                         <button
                             type="submit"
-                            className="flex-[1.5] bg-primary text-primary-foreground font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+                            className="flex-[1.5] bg-gradient-to-r from-amber-600 to-amber-500 text-black font-bold py-2.5 rounded-sm shadow-lg hover:shadow-amber-500/30 transition-all text-xs uppercase tracking-wider"
                         >
                             {t.claimModal.submit}
                         </button>

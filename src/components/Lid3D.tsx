@@ -3,7 +3,12 @@ import { useFrame } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
-export function Lid3D({ isOpen }: { isOpen: boolean }) {
+interface Lid3DProps {
+    isOpen: boolean;
+    onClose?: () => void;
+}
+
+export function Lid3D({ isOpen, onClose }: Lid3DProps) {
     const groupRef = useRef<THREE.Group>(null);
     const [lidTexture, redLacquer] = useTexture([
         "/textures/lid_texture_horse.jpg",
@@ -52,8 +57,26 @@ export function Lid3D({ isOpen }: { isOpen: boolean }) {
         }
     });
 
+    const handleClick = (e: { stopPropagation: () => void }) => {
+        e.stopPropagation();
+        if (onClose) {
+            onClose(); // This is actually a toggle function now
+        }
+    };
+
     return (
-        <group ref={groupRef} position={[0, 2.6, 0]}>
+        <group
+            ref={groupRef}
+            position={[0, 2.6, 0]}
+            onClick={handleClick}
+            onPointerOver={(e) => {
+                e.stopPropagation();
+                document.body.style.cursor = "pointer";
+            }}
+            onPointerOut={() => {
+                document.body.style.cursor = "auto";
+            }}
+        >
             {/* Lid Top - Multi-material mesh */}
             {/* Materials order: Right, Left, Top, Bottom, Front, Back */}
             <mesh position={[0, 0, 0]} castShadow receiveShadow>

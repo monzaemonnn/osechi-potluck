@@ -64,53 +64,17 @@ export function Tier3D({ position, tier, isOpen, onClaimSlot }: Tier3DProps) {
                 <meshStandardMaterial {...blackMaterialProps} />
             </mesh>
 
-            {/* Labels on all 4 sides - Only visible when open */}
+            {/* Label on front side only - visible when open */}
             {isOpen && (
-                <>
-                    {/* North Label */}
-                    <Text
-                        position={[0, -0.05, -1.76]}
-                        rotation={[0, Math.PI, 0]}
-                        fontSize={0.22}
-                        color="#F2C94C"
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        {tier.name}
-                    </Text>
-                    {/* South Label */}
-                    <Text
-                        position={[0, -0.05, 1.76]}
-                        fontSize={0.22}
-                        color="#F2C94C"
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        {tier.name}
-                    </Text>
-                    {/* East Label */}
-                    <Text
-                        position={[1.76, -0.05, 0]}
-                        rotation={[0, Math.PI / 2, 0]}
-                        fontSize={0.22}
-                        color="#F2C94C"
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        {tier.name}
-                    </Text>
-                    {/* West Label */}
-                    <Text
-                        position={[-1.76, -0.05, 0]}
-                        rotation={[0, -Math.PI / 2, 0]}
-                        fontSize={0.22}
-                        color="#F2C94C"
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        {tier.name}
-                    </Text>
-                </>
+                <Text
+                    position={[0, -0.05, 1.76]}
+                    fontSize={0.22}
+                    color="#F2C94C"
+                    anchorX="center"
+                    anchorY="middle"
+                >
+                    {tier.name}
+                </Text>
             )}
 
             {/* Slots */}

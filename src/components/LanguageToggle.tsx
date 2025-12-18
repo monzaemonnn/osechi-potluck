@@ -25,14 +25,14 @@ export function LanguageToggle() {
         <div className="relative" ref={containerRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-white/50 shadow-md flex items-center justify-center text-xl hover:scale-105 active:scale-95 transition-all"
+                className="px-3 py-2 rounded-sm bg-black/60 backdrop-blur-sm border border-amber-500/40 shadow-lg flex items-center justify-center text-sm hover:bg-black/80 hover:border-amber-400 transition-all text-amber-300 font-medium uppercase tracking-wider"
                 title="Change Language"
             >
-                {currentLang.flag}
+                {currentLang.code.toUpperCase()}
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 top-12 z-50 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-white/50 p-2 w-40 flex flex-col gap-1 animate-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 top-12 z-50 bg-gray-900/95 backdrop-blur-md rounded-sm shadow-xl border border-amber-500/30 p-1 w-36 flex flex-col animate-in slide-in-from-top-2 duration-200">
                     {LANGUAGES.map((lang) => (
                         <button
                             key={lang.code}
@@ -40,13 +40,14 @@ export function LanguageToggle() {
                                 setLanguage(lang.code);
                                 setIsOpen(false);
                             }}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-bold transition-colors ${language === lang.code
-                                    ? "bg-orange-100 text-orange-800"
-                                    : "hover:bg-gray-100 text-gray-700"
+                            className={`flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-colors ${language === lang.code
+                                ? "bg-amber-500/20 text-amber-300"
+                                : "hover:bg-white/5 text-gray-400 hover:text-gray-200"
                                 }`}
                         >
-                            <span className="text-lg">{lang.flag}</span>
-                            <span>{lang.label}</span>
+                            <span className="text-xs uppercase tracking-wider">{lang.code}</span>
+                            <span className="text-gray-500">|</span>
+                            <span className="text-xs">{lang.label}</span>
                         </button>
                     ))}
                 </div>

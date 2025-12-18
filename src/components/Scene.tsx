@@ -183,7 +183,7 @@ export function Scene() {
     };
 
     return (
-        <div className="w-full min-h-[500px] h-[calc(100vh-180px)] relative">
+        <div className="w-full h-screen relative">
             {/* Error Toast / Alert */}
             {(error || localError) && (
                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-sm">
@@ -207,7 +207,7 @@ export function Scene() {
                 </div>
             )}
 
-            <div className="absolute top-4 right-4 z-10 flex gap-3 items-center">
+            <div className="absolute top-4 right-4 z-10 flex gap-2 items-center">
                 <LanguageToggle />
 
                 {/* Auth */}
@@ -216,26 +216,25 @@ export function Scene() {
                 {/* Menu List */}
                 <button
                     onClick={() => setMenuModalOpen(true)}
-                    className="bg-white/80 backdrop-blur-sm border-2 border-primary text-primary w-10 h-10 rounded-full font-bold shadow-md hover:bg-white transition-all flex items-center justify-center text-xl active:scale-95"
+                    className="bg-black/60 backdrop-blur-sm border border-amber-500/40 text-amber-300 px-3 py-2 rounded-sm font-medium shadow-lg hover:bg-black/80 hover:border-amber-400 transition-all flex items-center justify-center text-sm uppercase tracking-wider"
                     title={t.appTitle}
                 >
-                    📜
+                    Menu
                 </button>
 
                 {/* Guide */}
                 <button
                     onClick={() => setHelpModalOpen(true)}
-                    className="bg-white/80 hover:bg-white text-gray-700 font-bold py-2 px-4 rounded-full shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/50"
+                    className="bg-black/60 hover:bg-black/80 text-amber-300 font-medium py-2 px-4 rounded-sm shadow-lg backdrop-blur-sm transition-all flex items-center gap-2 border border-amber-500/40 hover:border-amber-400 text-sm uppercase tracking-wider"
                     title={t.guide}
                 >
-                    <span className="text-lg">🍱</span>
-                    <span className="hidden sm:inline">{t.guide}</span>
+                    {t.guide}
                 </button>
 
                 {/* Open/Close Control */}
                 <button
                     onClick={() => setIsExploded(!isExploded)}
-                    className="bg-primary text-primary-foreground px-5 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all text-sm sm:text-base border-2 border-primary"
+                    className="bg-gradient-to-r from-amber-600 to-amber-500 text-black px-5 py-2 rounded-sm font-bold shadow-lg hover:shadow-amber-500/30 hover:shadow-xl transition-all text-sm uppercase tracking-wider border border-amber-400"
                 >
                     {isExploded ? t.closeBox : t.openBox}
                 </button>
@@ -254,7 +253,7 @@ export function Scene() {
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
                 <pointLight position={[-10, -10, -10]} intensity={0.5} />
 
-                <Jubako3D tiers={tiers} onClaimSlot={handleSlotClick} expanded={isExploded} />
+                <Jubako3D tiers={tiers} onClaimSlot={handleSlotClick} expanded={isExploded} onToggle={() => setIsExploded(!isExploded)} />
 
                 <ContactShadows position={[0, -2, 0]} opacity={0.5} scale={40} blur={2} far={20} resolution={512} />
                 <OrbitControls
@@ -315,8 +314,8 @@ export function Scene() {
 
 
 
-            <div className="absolute bottom-4 left-0 right-0 text-center text-sm text-gray-400 pointer-events-none">
-                <p>Drag to rotate • Click slot to claim</p>
+            <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-amber-200/30 pointer-events-none uppercase tracking-widest">
+                <p>Drag to rotate • Click lid to open • Click slot to claim</p>
             </div>
         </div>
     );

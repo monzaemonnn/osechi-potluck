@@ -43,57 +43,52 @@ export function RecipeModal({ isOpen, onClose, dish, origin }: RecipeModalProps)
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             <div
-                className="bg-white/95 backdrop-blur-md rounded-2xl w-full max-w-lg shadow-2xl border border-white/50 transform transition-all scale-100 animate-in zoom-in-95 duration-200 flex flex-col max-h-[85vh]"
+                className="bg-gray-900/95 backdrop-blur-md rounded-sm w-full max-w-lg shadow-2xl border border-amber-500/30 transform transition-all scale-100 animate-in zoom-in-95 duration-200 flex flex-col max-h-[85vh]"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-6 border-b border-gray-100 flex-shrink-0 flex justify-between items-center bg-orange-50/50 rounded-t-2xl">
+                <div className="p-6 border-b border-amber-500/20 flex-shrink-0 flex justify-between items-center bg-amber-500/5">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-800">
-                            Recipe: {dish} 🍳
+                        <h2 className="text-xl font-bold text-amber-300 uppercase tracking-wider">
+                            Recipe
                         </h2>
-                        {origin && <p className="text-sm text-gray-500">{origin} Style</p>}
+                        <p className="text-sm text-gray-400">{dish} {origin && `— ${origin}`}</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => {
                                 navigator.clipboard.writeText(recipe);
-                                // Optional: You could add a temporary "Copied!" state here if you want to be fancy, 
-                                // but for now a simple click effect is fine or we can assume user knows.
-                                // Let's adding a simple alert or just rely on the UI feedback of the click.
-                                alert("Recipe copied to clipboard! 📋");
+                                alert("Recipe copied to clipboard!");
                             }}
-                            className="bg-white/80 hover:bg-white text-orange-600 px-3 py-1 rounded-lg text-sm font-bold border border-orange-200 shadow-sm transition-all"
+                            className="bg-black/50 hover:bg-black/70 text-amber-300 px-3 py-1.5 rounded-sm text-xs font-medium border border-amber-500/30 transition-all uppercase tracking-wider"
                             disabled={loading || !recipe}
                         >
-                            Copy 📋
+                            Copy
                         </button>
-                        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors text-2xl">
-                            &times;
+                        <button onClick={onClose} className="text-gray-500 hover:text-gray-300 transition-colors text-xl">
+                            ✕
                         </button>
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 overflow-y-auto flex-grow text-gray-700 leading-relaxed font-medium">
+                <div className="p-6 overflow-y-auto flex-grow text-gray-300 leading-relaxed">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                            <div className="animate-spin text-4xl">👨‍🍳</div>
-                            <p className="text-gray-500 animate-pulse">Consulting the AI Chef...</p>
+                            <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                            <p className="text-gray-500 animate-pulse text-sm uppercase tracking-wider">Consulting the chef...</p>
                         </div>
                     ) : (
-                        <div className="prose prose-orange p-2">
-                            {/* Simple markdown rendering */}
+                        <div className="text-sm">
                             {recipe.split('\n').map((line, i) => {
-                                // Basic bold parser: **text** -> <strong>text</strong>
                                 const parts = line.split(/(\*\*.*?\*\*)/g);
                                 return (
-                                    <p key={i} className={`mb-2 ${line.startsWith('#') ? 'font-bold text-lg text-primary mt-4 border-b border-orange-100 pb-1' : ''}`}>
+                                    <p key={i} className={`mb-2 ${line.startsWith('#') ? 'font-bold text-base text-amber-300 mt-4 border-b border-amber-500/20 pb-1' : ''}`}>
                                         {parts.map((part, j) => {
                                             if (part.startsWith('**') && part.endsWith('**')) {
-                                                return <strong key={j}>{part.slice(2, -2)}</strong>;
+                                                return <strong key={j} className="text-amber-200">{part.slice(2, -2)}</strong>;
                                             }
                                             return part.replace(/^#+\s/, '');
                                         })}
@@ -105,12 +100,12 @@ export function RecipeModal({ isOpen, onClose, dish, origin }: RecipeModalProps)
                 </div>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-gray-100 flex-shrink-0 bg-gray-50/50 rounded-b-2xl">
+                <div className="p-4 border-t border-amber-500/20 flex-shrink-0 bg-black/30">
                     <button
                         onClick={onClose}
-                        className="w-full bg-primary text-primary-foreground font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-black font-bold py-3 px-6 rounded-sm shadow-lg hover:shadow-amber-500/30 transition-all uppercase tracking-wider text-sm"
                     >
-                        Got it! 👩‍🍳
+                        Done
                     </button>
                 </div>
             </div>
