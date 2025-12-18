@@ -67,10 +67,13 @@ import { MenuModal } from "./MenuModal";
 import { RecipeModal } from "./RecipeModal";
 import { LoginButton } from "./LoginButton";
 import { AuthChoiceModal } from "./AuthChoiceModal";
+import { LanguageToggle } from "./LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // ... existing imports ...
 
 export function Scene() {
+    const { t } = useLanguage();
     const { tiers, claimSlot, clearSlot, error, loading, currentUser } = useOsechi();
     const [claimModalOpen, setClaimModalOpen] = useState(false);
     const [detailsModalOpen, setDetailsModalOpen] = useState(false);
@@ -180,7 +183,7 @@ export function Scene() {
     };
 
     return (
-        <div className="w-full h-[600px] relative">
+        <div className="w-full min-h-[500px] h-[calc(100vh-180px)] relative">
             {/* Error Toast / Alert */}
             {(error || localError) && (
                 <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-sm">
@@ -205,6 +208,8 @@ export function Scene() {
             )}
 
             <div className="absolute top-4 right-4 z-10 flex gap-3 items-center">
+                <LanguageToggle />
+
                 {/* Auth */}
                 <LoginButton />
 
@@ -212,7 +217,7 @@ export function Scene() {
                 <button
                     onClick={() => setMenuModalOpen(true)}
                     className="bg-white/80 backdrop-blur-sm border-2 border-primary text-primary w-10 h-10 rounded-full font-bold shadow-md hover:bg-white transition-all flex items-center justify-center text-xl active:scale-95"
-                    title="View Full Menu"
+                    title={t.appTitle}
                 >
                     📜
                 </button>
@@ -221,10 +226,10 @@ export function Scene() {
                 <button
                     onClick={() => setHelpModalOpen(true)}
                     className="bg-white/80 hover:bg-white text-gray-700 font-bold py-2 px-4 rounded-full shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/50"
-                    title="Osechi Guide"
+                    title={t.guide}
                 >
                     <span className="text-lg">🍱</span>
-                    <span className="hidden sm:inline">Guide</span>
+                    <span className="hidden sm:inline">{t.guide}</span>
                 </button>
 
                 {/* Open/Close Control */}
@@ -232,11 +237,15 @@ export function Scene() {
                     onClick={() => setIsExploded(!isExploded)}
                     className="bg-primary text-primary-foreground px-5 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all text-sm sm:text-base border-2 border-primary"
                 >
-                    {isExploded ? "📦 Close Box" : "✨ Open Osechi"}
+                    {isExploded ? t.closeBox : t.openBox}
                 </button>
             </div>
 
-            <Canvas camera={{ position: [5, 4, 8], fov: 50 }}>
+            <Canvas
+                camera={{ position: [5, 4, 8], fov: 50 }}
+                gl={{ alpha: true }}
+                style={{ background: 'transparent' }}
+            >
                 <CameraController
                     isExploded={isExploded}
                     controlsRef={controlsRef}
@@ -254,7 +263,7 @@ export function Scene() {
                     minPolarAngle={Math.PI / 4}
                     maxPolarAngle={Math.PI / 2}
                 />
-                <Environment preset="city" />
+                <Environment preset="city" background={false} />
             </Canvas>
 
             <ClaimModal

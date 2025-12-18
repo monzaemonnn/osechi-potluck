@@ -3,8 +3,10 @@
 import { signOut, signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function LoginButton() {
+    const { t } = useLanguage();
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
@@ -50,7 +52,7 @@ export function LoginButton() {
                     onClick={handleLogout}
                     className="text-xs font-bold text-gray-500 hover:text-red-500 px-2 transition-colors"
                 >
-                    Sign Out
+                    {t.signOut}
                 </button>
             </div>
         );
@@ -62,7 +64,7 @@ export function LoginButton() {
             className="bg-white/80 hover:bg-white text-gray-700 font-bold py-2 px-4 rounded-full shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 border border-white/50 flex items-center gap-2"
         >
             <span className="text-lg">🔑</span>
-            <span className="hidden sm:inline text-sm">Sign In</span>
+            <span className="hidden sm:inline text-sm">{t.signIn}</span>
         </button>
     );
 }

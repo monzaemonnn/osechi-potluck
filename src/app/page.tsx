@@ -2,9 +2,9 @@ import { Scene } from "@/components/Scene";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#FFF9F0] py-8 px-4">
-      <div className="max-w-md mx-auto mb-8 text-center">
-        <h1 className="text-4xl font-bold text-primary mb-2 tracking-tight">
+    <main className="min-h-screen py-4 px-4">
+      <div className="max-w-md mx-auto mb-4 text-center">
+        <h1 className="text-4xl font-bold text-primary mb-1 tracking-tight">
           🎍 Osechi 2026 🐴
         </h1>
         <p className="text-secondary-foreground text-sm font-medium">
@@ -14,7 +14,7 @@ export default function Home() {
 
       <Scene />
 
-      <footer className="mt-12 text-center text-xs text-gray-400">
+      <footer className="mt-4 text-center text-xs text-gray-400">
         <p>Made with ❤️ for the Sharehouse</p>
       </footer>
     </main>

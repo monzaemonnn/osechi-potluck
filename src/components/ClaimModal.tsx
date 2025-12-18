@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FoodColor } from "@/hooks/useOsechi";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ClaimModalProps {
     isOpen: boolean;
@@ -11,7 +12,7 @@ interface ClaimModalProps {
         category: string;
         origin: string;
         meaning: string;
-    }) => { success: boolean; message?: string }; // RETURN TYPE ADDED
+    }) => { success: boolean; message?: string };
     currentDishes: { dish: string; color: string; category?: string }[];
     onGetRecipe: (dish: string, origin: string) => void;
     tierName?: string;
@@ -35,6 +36,7 @@ const CATEGORIES = [
 ];
 
 export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetRecipe, tierName }: ClaimModalProps) {
+    const { t } = useLanguage();
     const [user, setUser] = useState("");
     const [dish, setDish] = useState("");
     const [color, setColor] = useState<FoodColor>("Red");
@@ -51,7 +53,6 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
         const result = onSubmit({ user, dish, color, category, origin, meaning });
 
         if (result.success) {
-            // Only clear if successful
             setUser("");
             setDish("");
             setColor("Red");
@@ -59,7 +60,6 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
             setOrigin("");
             setMeaning("");
         } else {
-            // Show error immediately without closing modal
             alert(result.message || "Something went wrong. Please try again.");
         }
     };
@@ -93,9 +93,9 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     currentDishes,
-                    userOrigin: origin, // Send current origin input
-                    avoidDish: dish,    // Send current dish to avoid repetition
-                    tierName,           // SEND TIER CONTEXT
+                    userOrigin: origin,
+                    avoidDish: dish,
+                    tierName,
                 }),
             });
             const data = await res.json();
@@ -124,7 +124,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                 <div className="flex justify-between items-center mb-4">
                     <div>
                         <h2 className="text-2xl font-bold text-gray-800 leading-tight">
-                            Add a Dish 🍱
+                            {t.claimModal.title}
                         </h2>
                         {tierName && <p className="text-xs text-orange-600 font-bold">{tierName}</p>}
                     </div>
@@ -137,7 +137,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                         {isSuggesting ? (
                             <span className="animate-spin">👨‍🍳</span>
                         ) : (
-                            "👨‍🍳 Suggest Dish"
+                            t.claimModal.suggestBtn
                         )}
                     </button>
                 </div>
@@ -146,25 +146,25 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                     {/* Basic Info */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Your Name</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.name}</label>
                             <input
                                 type="text"
                                 required
                                 value={user}
                                 onChange={(e) => setUser(e.target.value)}
                                 className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50 font-bold"
-                                placeholder="Name"
+                                placeholder={t.claimModal.name}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Dish Name</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.dish}</label>
                             <input
                                 type="text"
                                 required
                                 value={dish}
                                 onChange={(e) => setDish(e.target.value)}
                                 className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50 font-bold"
-                                placeholder="e.g. Sushi"
+                                placeholder={t.claimModal.dish}
                             />
                         </div>
                     </div>
@@ -172,7 +172,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                     {/* Category & Origin */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Taste / Category</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.category}</label>
                             <select
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
@@ -182,23 +182,20 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Origin</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">{t.claimModal.origin}</label>
                             <input
                                 type="text"
                                 value={origin}
                                 onChange={(e) => setOrigin(e.target.value)}
                                 className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50"
-                                placeholder="e.g. Italy"
+                                placeholder={t.claimModal.origin}
                             />
-                            <p className="text-[10px] text-gray-400 mt-1 ml-1">
-                                💡 Tip: Type a country here to get specific suggestions!
-                            </p>
                         </div>
                     </div>
 
                     {/* Color Selection */}
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Primary Color</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">{t.claimModal.color}</label>
                         <div className="flex justify-between gap-2">
                             {COLORS.map((c) => (
                                 <button
@@ -222,7 +219,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                     <div>
                         <div className="flex justify-between items-end mb-1">
                             <label className="block text-sm font-bold text-gray-700">
-                                Meaning (Iware/いわれ)
+                                {t.claimModal.meaning}
                             </label>
                             <button
                                 type="button"
@@ -233,7 +230,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                                 {isGenerating ? (
                                     <span className="animate-spin">✨</span>
                                 ) : (
-                                    "✨ Generate with AI"
+                                    t.claimModal.generateBtn
                                 )}
                             </button>
                         </div>
@@ -241,7 +238,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             value={meaning}
                             onChange={(e) => setMeaning(e.target.value)}
                             className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white/50 text-sm h-20 resize-none"
-                            placeholder="Why is this lucky? (Or let AI invent a reason!)"
+                            placeholder={t.claimModal.meaning}
                         />
                     </div>
 
@@ -252,7 +249,7 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             onClick={onClose}
                             className="bg-gray-100 text-gray-600 font-bold py-3 px-4 rounded-xl hover:bg-gray-200 transition-all text-sm"
                         >
-                            Cancel
+                            {t.claimModal.cancel}
                         </button>
                         <button
                             type="button"
@@ -260,13 +257,13 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                             disabled={!dish}
                             className="flex-1 bg-orange-100 text-orange-700 font-bold py-3 rounded-xl hover:bg-orange-200 transition-all disabled:opacity-50 text-sm flex items-center justify-center gap-1"
                         >
-                            📜 Check Recipe
+                            {t.claimModal.checkRecipe}
                         </button>
                         <button
                             type="submit"
                             className="flex-[1.5] bg-primary text-primary-foreground font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
                         >
-                            Place Dish 🥢
+                            {t.claimModal.submit}
                         </button>
                     </div>
                 </form>
