@@ -4,6 +4,7 @@
             ".read": true,
             "tiers": {
                 "$tierIndex": {
+                    ".validate": "$tierIndex.matches(/^[0-2]$/)",
                     "name": {
                         ".write": false
                     },
@@ -13,7 +14,7 @@
                     "slots": {
                         "$slotIndex": {
                             ".write": "!data.exists() || data.child('uid').val() == null || auth.uid == data.child('uid').val()",
-                            ".validate": "newData.hasChildren(['id', 'user', 'dish', 'color']) && newData.child('user').isString() && newData.child('user').val().length <= 30 && newData.child('dish').isString() && newData.child('dish').val().length <= 50 && newData.child('color').isString()"
+                            ".validate": "$slotIndex.matches(/^[0-8]$/) && newData.hasChildren(['id', 'user', 'dish', 'color']) && newData.child('user').isString() && newData.child('user').val().length <= 30 && newData.child('dish').isString() && newData.child('dish').val().length <= 50 && newData.child('color').isString()"
                         }
                     }
                 }

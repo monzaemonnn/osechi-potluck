@@ -1,9 +1,27 @@
 import { NextResponse } from "next/server";
+import { rateLimit, getClientIdentifier } from "@/lib/rateLimit";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
 
 export async function POST(req: Request) {
+    // Rate limiting: 10 requests per minute per IP
+    const clientId = getClientIdentifier(req);
+    const { allowed, remaining, resetIn } = rateLimit(`meaning:${clientId}`, { maxRequests: 10, windowMs: 60000 });
+
+    if (!allowed) {
+        return NextResponse.json(
+            { error: "Too many requests. Please wait a moment." },
+            {
+                status: 429,
+                headers: {
+                    'X-RateLimit-Remaining': '0',
+                    'X-RateLimit-Reset': String(Math.ceil(resetIn / 1000))
+                }
+            }
+        );
+    }
+
     if (!GEMINI_API_KEY) {
         return NextResponse.json({ error: "Server missing API Key" }, { status: 500 });
     }
