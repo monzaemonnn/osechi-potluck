@@ -127,10 +127,10 @@ export function Scene() {
             if (result.success) {
                 setClaimModalOpen(false);
                 setSelectedSlot(null);
-            } else {
-                setLocalError(result.message || "Error claiming slot");
             }
+            return result; // RETURN RESULT for Modal to handle
         }
+        return { success: false, message: "No slot selected" };
     };
 
     const handleClear = () => {

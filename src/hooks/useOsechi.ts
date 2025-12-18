@@ -98,7 +98,8 @@ export function useOsechi() {
       });
       totalSlots++;
       brownSlots++;
-      if (brownSlots / totalSlots > 0.5) {
+      // Only enforce variety after 3 selections to avoid frustration for early birds
+      if (totalSlots > 3 && brownSlots / totalSlots > 0.5) {
         return { success: false, message: "The Osechi is too ugly! We need Red or Green foods only." };
       }
     }

@@ -11,51 +11,35 @@ interface ClaimModalProps {
         category: string;
         origin: string;
         meaning: string;
-    }) => void;
+    }) => { success: boolean; message?: string }; // RETURN TYPE ADDED
     currentDishes: { dish: string; color: string; category?: string }[];
     onGetRecipe: (dish: string, origin: string) => void;
     tierName?: string;
 }
 
-const COLORS: { value: FoodColor; label: string; bg: string }[] = [
-    { value: "Red", label: "Red (Joy/Protection)", bg: "bg-[#D9381E]" },
-    { value: "White", label: "White (Purity)", bg: "bg-white border-2 border-gray-200" },
-    { value: "Yellow", label: "Yellow (Wealth)", bg: "bg-[#F2C94C]" },
-    { value: "Green", label: "Green (Health)", bg: "bg-[#4CAF50]" },
-    { value: "Brown", label: "Brown (Stability)", bg: "bg-[#8D6E63]" },
-];
-
-const CATEGORIES = [
-    "Savory 🧂",
-    "Sweet 🍬",
-    "Sour 🍋",
-    "Spicy 🌶️",
-    "Alcohol 🍶",
-    "Other 🥢"
-];
+// ... imports ...
 
 export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetRecipe, tierName }: ClaimModalProps) {
-    const [user, setUser] = useState("");
-    const [dish, setDish] = useState("");
-    const [color, setColor] = useState<FoodColor>("Red");
-    const [category, setCategory] = useState(CATEGORIES[0]);
-    const [origin, setOrigin] = useState("");
-    const [meaning, setMeaning] = useState("");
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [isSuggesting, setIsSuggesting] = useState(false);
+    // ... state ...
 
-    if (!isOpen) return null;
+    // ... (render checks) ...
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit({ user, dish, color, category, origin, meaning });
-        // Reset form
-        setUser("");
-        setDish("");
-        setColor("Red");
-        setCategory(CATEGORIES[0]);
-        setOrigin("");
-        setMeaning("");
+        const result = onSubmit({ user, dish, color, category, origin, meaning });
+
+        if (result.success) {
+            // Only clear if successful
+            setUser("");
+            setDish("");
+            setColor("Red");
+            setCategory(CATEGORIES[0]);
+            setOrigin("");
+            setMeaning("");
+        } else {
+            // Show error immediately without closing modal
+            alert(result.message || "Something went wrong. Please try again.");
+        }
     };
 
     const handleGenerateMeaning = async () => {
