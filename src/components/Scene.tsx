@@ -66,35 +66,49 @@ import { HelpModal } from "./HelpModal";
 import { MenuModal } from "./MenuModal";
 import { RecipeModal } from "./RecipeModal";
 import { LoginButton } from "./LoginButton";
+import { AuthChoiceModal } from "./AuthChoiceModal";
 
 // ... existing imports ...
 
 export function Scene() {
-    const { tiers, claimSlot, clearSlot, error, loading } = useOsechi();
+    const { tiers, claimSlot, clearSlot, error, loading, currentUser } = useOsechi();
     const [claimModalOpen, setClaimModalOpen] = useState(false);
     const [detailsModalOpen, setDetailsModalOpen] = useState(false);
     const [helpModalOpen, setHelpModalOpen] = useState(false);
-    const [menuModalOpen, setMenuModalOpen] = useState(false);
-    const [recipeModalOpen, setRecipeModalOpen] = useState(false);
-    const [tempRecipeTarget, setTempRecipeTarget] = useState<{ dish: string; origin: string } | null>(null);
-    const [selectedSlot, setSelectedSlot] = useState<{ tierIndex: number; slotIndex: number } | null>(null);
-    const [localError, setLocalError] = useState<string | null>(null);
-    const [isExploded, setIsExploded] = useState(false);
-    const controlsRef = useRef<OrbitControlsImpl>(null);
+    const [authChoiceOpen, setAuthChoiceOpen] = useState(false);
+    // ... other state ...
 
-    // Check for first-time visit
+    // Check for first-time visit (Auth Choice)
     const initialized = useRef(false);
     useEffect(() => {
-        if (!initialized.current) {
+        if (!initialized.current && !loading) {
             initialized.current = true;
-            const hasVisited = localStorage.getItem("osechi_visited");
-            if (!hasVisited) {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setHelpModalOpen(true);
-                localStorage.setItem("osechi_visited", "true");
+            // logic: If not logged in AND haven't chosen guest mode yet -> Show Choice
+            const hasJoined = localStorage.getItem("osechi_joined");
+
+            if (!currentUser && !hasJoined) {
+                setAuthChoiceOpen(true);
+            } else if (!hasJoined) {
+                // If already logged in but no flag (rare), set flag
+                localStorage.setItem("osechi_joined", "true");
             }
         }
-    }, []);
+    }, [loading, currentUser]);
+
+    // Close Auth Choice if user logs in
+    useEffect(() => {
+        if (currentUser) {
+            setAuthChoiceOpen(false);
+            localStorage.setItem("osechi_joined", "true");
+        }
+    }, [currentUser]);
+
+    const handleGuestJoin = () => {
+        setAuthChoiceOpen(false);
+        localStorage.setItem("osechi_joined", "true");
+        // Optional: Open Help after joining as guest?
+        setHelpModalOpen(true);
+    };
 
     const handleSlotClick = (tierIndex: number, slotIndex: number) => {
         // ... existing logic ...
@@ -277,6 +291,11 @@ export function Scene() {
                 isOpen={menuModalOpen}
                 onClose={() => setMenuModalOpen(false)}
                 tiers={tiers}
+            />
+
+            <AuthChoiceModal
+                isOpen={authChoiceOpen}
+                onGuest={handleGuestJoin}
             />
 
 
