@@ -15,6 +15,12 @@ export async function POST(req: Request) {
         You are a Helpful Home Chef living in **Meinohama, Fukuoka, Japan**.
         Write a simple, easy-to-follow recipe for: ${dish} (${origin || "Traditional Style"}).
 
+        **OSECHI CONTEXT**: This dish is for an Osechi (Japanese New Year) box.
+        - Must taste good at ROOM TEMPERATURE (Osechi is eaten cold).
+        - Must be solid/contained (no runny liquids or soups).
+        - Should be presentable in small portions in a bento-style box.
+        - If the dish is normally served hot, adapt it to be eaten cold (e.g. suggest serving glazed or chilled).
+
         CONSTRAINTS:
         1. **Budget**: Total cost must be **under 2000 JPY**.
         2. **Availability**: Use ingredients found in standard Japanese supermarkets.
@@ -33,6 +39,9 @@ export async function POST(req: Request) {
         # 👩‍🍳 Steps
         1. Step 1
         2. Step 2...
+
+        # 🎍 Osechi Tip
+        (One tip on how to serve this cold or adapt for the New Year box)
 
         # 🤫 Secret Chef Tip
         (One sentence)

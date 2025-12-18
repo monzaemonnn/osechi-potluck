@@ -1,9 +1,9 @@
 {
     "rules": {
         "osechi": {
+            ".read": true,
             "tiers": {
                 "$tierIndex": {
-                    ".read": true,
                     "name": {
                         ".write": false
                     },
@@ -12,7 +12,6 @@
                     },
                     "slots": {
                         "$slotIndex": {
-                            ".read": true,
                             ".write": "!data.exists() || data.child('uid').val() == null || auth.uid == data.child('uid').val()",
                             ".validate": "newData.hasChildren(['id', 'user', 'dish', 'color']) && newData.child('user').isString() && newData.child('user').val().length <= 30 && newData.child('dish').isString() && newData.child('dish').val().length <= 50 && newData.child('color').isString()"
                         }

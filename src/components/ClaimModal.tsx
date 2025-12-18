@@ -141,6 +141,11 @@ export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetReci
                 <div className="gold-divider mb-4"></div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Osechi Suitability Warning */}
+                    <div className="bg-amber-900/40 border border-amber-600/50 rounded-sm p-2 text-xs text-amber-200">
+                        {t.claimModal.osechiWarning}
+                    </div>
+
                     {/* Basic Info */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>

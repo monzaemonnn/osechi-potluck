@@ -60,7 +60,8 @@ const TRANSLATIONS = {
             generateBtn: "Generate with AI",
             checkRecipe: "Check Recipe",
             submit: "Place Dish",
-            cancel: "Cancel"
+            cancel: "Cancel",
+            osechiWarning: "⚠️ Osechi dishes must be solid, room-temp friendly, and bento-suitable. No soups!"
         }
     },
     ja: {
@@ -110,7 +111,8 @@ const TRANSLATIONS = {
             generateBtn: "AIで生成",
             checkRecipe: "レシピを見る",
             submit: "料理を詰める",
-            cancel: "キャンセル"
+            cancel: "キャンセル",
+            osechiWarning: "⚠️ おせち料理は固形で、常温で美味しく、お弁当に適したものを。スープはNG！"
         }
     },
     fr: {
@@ -160,7 +162,8 @@ const TRANSLATIONS = {
             generateBtn: "Générer (IA)",
             checkRecipe: "Recette",
             submit: "Ajouter",
-            cancel: "Annuler"
+            cancel: "Annuler",
+            osechiWarning: "⚠️ Les plats doivent être solides, bons à température ambiante, et adaptés au bento. Pas de soupes !"
         }
     },
     zh: {
@@ -210,7 +213,8 @@ const TRANSLATIONS = {
             generateBtn: "AI生成",
             checkRecipe: "查看食谱",
             submit: "上菜",
-            cancel: "取消"
+            cancel: "取消",
+            osechiWarning: "⚠️ 御节料理需要是固体、常温可食、适合便当的菜肴。不可以是汤！"
         }
     },
     ko: {
@@ -260,7 +264,8 @@ const TRANSLATIONS = {
             generateBtn: "AI 생성",
             checkRecipe: "레시피 확인",
             submit: "요리 담기",
-            cancel: "취소"
+            cancel: "취소",
+            osechiWarning: "⚠️ 오세치 요리는 고체, 상온에서 맛있고, 도시락에 적합해야 합니다. 국물 요리는 안 됩니다!"
         }
     }
 };
