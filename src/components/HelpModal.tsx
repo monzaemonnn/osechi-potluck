@@ -79,6 +79,13 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                         </div>
                     </div>
 
+                    {/* Osechi Rules Warning */}
+                    <div className="bg-amber-500/10 p-3 rounded-sm border border-amber-500/30">
+                        <p className="text-xs text-amber-200 leading-relaxed">
+                            {t.helpModal.osechiRules}
+                        </p>
+                    </div>
+
                     {/* How to Participate */}
                     <div className="bg-white/5 p-4 rounded-sm border-l-2 border-gray-500/50">
                         <h3 className="font-bold text-gray-300 mb-2 text-sm uppercase tracking-wider">{t.helpModal.howTo}</h3>
