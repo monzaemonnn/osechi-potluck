@@ -38,3 +38,38 @@ Firebase actually has **two** databases. Confusion is common!
 *   **Why not?**: It's overkill for our simple potluck.
 
 **Note:** In your code (`src/lib/firebase.ts`), `getDatabase(app)` connects specifically to the **Realtime Database**. If we wanted the other one, we would have used `getFirestore(app)`.
+
+---
+
+## 3. Security Rules (IMPORTANT!)
+
+By default, your database is **wide open**. Anyone could bypass your UI and directly write garbage to your database using DevTools.
+
+### Setting Up Security Rules
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Open your project → **Build** → **Realtime Database**
+3. Click the **Rules** tab
+4. Copy the contents of `database.rules.json` from the project root
+5. Paste and click **Publish**
+
+### What the Rules Do
+
+```
+✅ Anyone can READ all slots
+✅ Anyone can WRITE to empty slots
+✅ Anyone can EDIT slots with no owner (uid == null)
+✅ Only the OWNER can edit/delete their own slots
+✅ Validates required fields (id, user, dish, color)
+✅ Validates string lengths (user ≤ 30, dish ≤ 50)
+❌ Cannot modify tier names or IDs
+```
+
+### Testing Rules
+
+After publishing, test by:
+1. Creating a slot while logged in
+2. Logging out
+3. Trying to delete that slot → Should fail!
+
+⚠️ **Note**: Guest entries (no login) have `uid: null`, so anyone can still edit those. This is intentional for the potluck's community vibe!
