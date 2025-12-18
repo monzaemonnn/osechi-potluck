@@ -44,7 +44,8 @@ const TRANSLATIONS = {
             howTo: "How to Contribute",
             step1: "Click an empty slot",
             step2: "Add a dish from your country",
-            step3: "Check other dishes & recipes!",
+            step3: "Budget around 2000 yen for ingredients",
+            step4: "Check other dishes & recipes!",
             btn: "Let's Eat"
         },
         claimModal: {
@@ -93,7 +94,8 @@ const TRANSLATIONS = {
             howTo: "参加方法",
             step1: "空いている場所をクリック",
             step2: "あなたの国の料理を追加",
-            step3: "他の人の料理もチェック！",
+            step3: "材料費は2000円程度で",
+            step4: "他の人の料理もチェック！",
             btn: "いただきます"
         },
         claimModal: {
@@ -142,7 +144,8 @@ const TRANSLATIONS = {
             howTo: "Comment participer",
             step1: "Cliquez sur une case vide",
             step2: "Ajoutez un plat de votre pays",
-            step3: "Découvrez les autres plats !",
+            step3: "Budget: environ 2000 yens",
+            step4: "Découvrez les autres plats !",
             btn: "Bon appétit"
         },
         claimModal: {
@@ -191,7 +194,8 @@ const TRANSLATIONS = {
             howTo: "如何参与",
             step1: "点击空位",
             step2: "添加来自您家乡的菜肴",
-            step3: "查看其他菜肴！",
+            step3: "食材预算约2000日元",
+            step4: "查看其他菜肴！",
             btn: "开动了"
         },
         claimModal: {
@@ -240,7 +244,8 @@ const TRANSLATIONS = {
             howTo: "참여 방법",
             step1: "빈 칸을 클릭하세요",
             step2: "당신의 나라 요리를 추가하세요",
-            step3: "다른 요리도 확인해보세요!",
+            step3: "재료비는 약 2000엔 정도로",
+            step4: "다른 요리도 확인해보세요!",
             btn: "잘 먹겠습니다"
         },
         claimModal: {

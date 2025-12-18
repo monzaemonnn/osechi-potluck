@@ -86,6 +86,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                             <li><span className="text-amber-400 font-bold">1.</span> {t.helpModal.step1}</li>
                             <li><span className="text-amber-400 font-bold">2.</span> {t.helpModal.step2}</li>
                             <li><span className="text-amber-400 font-bold">3.</span> {t.helpModal.step3}</li>
+                            <li><span className="text-amber-400 font-bold">4.</span> {t.helpModal.step4}</li>
                         </ul>
                     </div>
                 </div>

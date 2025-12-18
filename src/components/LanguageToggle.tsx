@@ -32,7 +32,7 @@ export function LanguageToggle() {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 top-12 z-50 bg-gray-900/95 backdrop-blur-md rounded-sm shadow-xl border border-amber-500/30 p-1 w-36 flex flex-col animate-in slide-in-from-top-2 duration-200">
+                <div className="absolute left-0 sm:left-auto sm:right-0 top-12 z-50 bg-gray-900/95 backdrop-blur-md rounded-sm shadow-xl border border-amber-500/30 p-1 w-36 flex flex-col animate-in slide-in-from-top-2 duration-200">
                     {LANGUAGES.map((lang) => (
                         <button
                             key={lang.code}
