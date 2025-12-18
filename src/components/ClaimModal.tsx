@@ -17,12 +17,34 @@ interface ClaimModalProps {
     tierName?: string;
 }
 
-// ... imports ...
+const COLORS: { value: FoodColor; label: string; bg: string }[] = [
+    { value: "Red", label: "Red (Joy/Protection)", bg: "bg-[#D9381E]" },
+    { value: "White", label: "White (Purity)", bg: "bg-white border-2 border-gray-200" },
+    { value: "Yellow", label: "Yellow (Wealth)", bg: "bg-[#F2C94C]" },
+    { value: "Green", label: "Green (Health)", bg: "bg-[#4CAF50]" },
+    { value: "Brown", label: "Brown (Stability)", bg: "bg-[#8D6E63]" },
+];
+
+const CATEGORIES = [
+    "Savory 🧂",
+    "Sweet 🍬",
+    "Sour 🍋",
+    "Spicy 🌶️",
+    "Alcohol 🍶",
+    "Other 🥢"
+];
 
 export function ClaimModal({ isOpen, onClose, onSubmit, currentDishes, onGetRecipe, tierName }: ClaimModalProps) {
-    // ... state ...
+    const [user, setUser] = useState("");
+    const [dish, setDish] = useState("");
+    const [color, setColor] = useState<FoodColor>("Red");
+    const [category, setCategory] = useState(CATEGORIES[0]);
+    const [origin, setOrigin] = useState("");
+    const [meaning, setMeaning] = useState("");
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [isSuggesting, setIsSuggesting] = useState(false);
 
-    // ... (render checks) ...
+    if (!isOpen) return null;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
