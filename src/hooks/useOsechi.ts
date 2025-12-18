@@ -13,8 +13,8 @@ export interface SlotData {
   category?: string;
   origin?: string;
   meaning?: string;
-  uid?: string;      // NEW: Owner ID
-  photoURL?: string; // NEW: Owner Avatar
+  uid?: string | null;      // NEW: Owner ID
+  photoURL?: string | null; // NEW: Owner Avatar
 }
 
 // ... (TierData interface remains same)
@@ -117,8 +117,8 @@ export function useOsechi() {
     newTiers[tierIndex].slots[slotIndex] = {
       ...data,
       id: crypto.randomUUID(),
-      uid: currentUser?.uid,
-      photoURL: currentUser?.photoURL || undefined
+      uid: currentUser?.uid || null,
+      photoURL: currentUser?.photoURL || null
     };
 
     set(ref(db, "osechi/tiers"), newTiers).catch((err) => {
