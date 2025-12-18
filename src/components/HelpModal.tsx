@@ -28,9 +28,12 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
                     <h2 className="text-2xl font-bold text-primary mb-2">
                         Osechi 2026: Sharehouse Potluck 🌍
                     </h2>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 text-sm mb-4">
                         Let's celebrate our diversity! Connect through food.
                     </p>
+                    <div className="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg font-bold text-sm border border-yellow-200 shadow-sm">
+                        📅 Party Start: Jan 1st, 12:00 PM
+                    </div>
                 </div>
 
                 <div className="space-y-6 mb-8 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
